@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Bookmarks</title>
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    h2 { text-align: center; }
 
+    input {
+      padding: 8px;
+      margin: 5px;
+      width: 40%;
+    }
+
+    button {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .card {
+      background: white;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    a {
+      text-decoration: none;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🔖 My Bookmark Manager</h2>
+
+<input id="title" placeholder="Title">
+<input id="url" placeholder="https://example.com">
+<button onclick="addBookmark()">Add</button>
+
+<div id="list"></div>
+
+<script>
+let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+
+function render() {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  bookmarks.forEach((b, i) => {
+    list.innerHTML += `
+      <div class="card">
+        <a href="${b.url}" target="_blank">${b.title}</a>
+        <button onclick="removeBookmark(${i})">❌</button>
+      </div>
+    `;
+  });
+}
+
+function addBookmark() {
+  const title = document.getElementById("title").value;
+  const url = document.getElementById("url").value;
+
+  if (!title || !url) {
+    alert("Enter both fields");
+    return;
+  }
+
+  bookmarks.push({ title, url });
+  localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+
+  document.getElementById("title").value = "";
+  document.getElementById("url").value = "";
+
+  render();
+}
+
+function removeBookmark(index) {
+  bookmarks.splice(index, 1);
+  localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
